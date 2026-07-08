@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Console — Productivity Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark" data-timeband="day">
+
+  <!-- ===================== HEADER / INSTRUMENT STRIP ===================== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-dot" aria-hidden="true"></span>
+      <span class="brand-name">CONSOLE</span>
+      <span class="brand-sub">daily ops</span>
+    </div>
+
+    <div class="clock-widget" id="clockWidget" aria-live="polite">
+      <span class="clock-time" id="clockTime">--:--:--</span>
+      <span class="clock-date" id="clockDate">--- -- ----</span>
+    </div>
+
+    <div class="topbar-controls">
+      <div class="weather-chip" id="weatherChip" title="Current weather">
+        <span class="weather-chip-icon" id="weatherChipIcon">◌</span>
+        <span class="weather-chip-temp" id="weatherChipTemp">--°</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Toggle light and dark mode">
+        <span class="theme-toggle-track">
+          <span class="theme-toggle-thumb"></span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===================== DASHBOARD GRID ===================== -->
+  <main class="dashboard" id="dashboard">
+    <p class="dashboard-eyebrow">Select a station to open it</p>
+    <div class="card-grid">
+
+      <button class="card" data-feature="todo">
+        <span class="card-led" aria-hidden="true"></span>
+        <svg class="card-icon" viewBox="0 0 40 40" aria-hidden="true">
+          <rect x="8" y="6" width="24" height="28" rx="2" class="ic-stroke"/>
+          <path d="M13 14h14M13 20h14M13 26h9" class="ic-stroke"/>
+          <circle cx="10" cy="14" r="1.6" class="ic-fill"/>
+          <circle cx="10" cy="20" r="1.6" class="ic-fill"/>
+          <circle cx="10" cy="26" r="1.6" class="ic-fill"/>
+        </svg>
+        <span class="card-title">Task List</span>
+        <span class="card-meta" id="todoCardMeta">0 open</span>
+      </button>
+
+      <button class="card" data-feature="planner">
+        <span class="card-led" aria-hidden="true"></span>
+        <svg class="card-icon" viewBox="0 0 40 40" aria-hidden="true">
+          <rect x="7" y="8" width="26" height="24" rx="2" class="ic-stroke"/>
+          <path d="M7 15h26" class="ic-stroke"/>
+          <path d="M13 5v6M27 5v6" class="ic-stroke"/>
+          <path d="M12 21h5M12 26h9" class="ic-stroke"/>
+        </svg>
+        <span class="card-title">Daily Planner</span>
+        <span class="card-meta" id="plannerCardMeta">hourly grid</span>
+      </button>
+
+      <button class="card" data-feature="motivation">
+        <span class="card-led" aria-hidden="true"></span>
+        <svg class="card-icon" viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M12 26c-3-2-5-6-4-10 1-5 6-8 11-7 5 1 8 6 6 11-1 3-4 5-4 8" class="ic-stroke"/>
+          <path d="M16 30h8" class="ic-stroke"/>
+          <path d="M17 33h6" class="ic-stroke"/>
+        </svg>
+        <span class="card-title">Motivation</span>
+        <span class="card-meta">quote feed</span>
+      </button>
+
+      <button class="card" data-feature="pomodoro">
+        <span class="card-led" aria-hidden="true"></span>
+        <svg class="card-icon" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="22" r="13" class="ic-stroke"/>
+          <path d="M20 22V13" class="ic-stroke"/>
+          <path d="M16 6h8" class="ic-stroke"/>
+        </svg>
+        <span class="card-title">Focus Timer</span>
+        <span class="card-meta" id="pomodoroCardMeta">25:00</span>
+      </button>
+
+      <button class="card" data-feature="weather">
+        <span class="card-led" aria-hidden="true"></span>
+        <svg class="card-icon" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="16" cy="16" r="6" class="ic-stroke"/>
+          <path d="M14 27h13a5 5 0 0 0 1-9.9A8 8 0 0 0 13 20" class="ic-stroke"/>
+        </svg>
+        <span class="card-title">Weather</span>
+        <span class="card-meta" id="weatherCardMeta">checking…</span>
+      </button>
+
+      <button class="card" data-feature="goals">
+        <span class="card-led" aria-hidden="true"></span>
+        <svg class="card-icon" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="13" class="ic-stroke"/>
+          <circle cx="20" cy="20" r="7.5" class="ic-stroke"/>
+          <circle cx="20" cy="20" r="2" class="ic-fill"/>
+        </svg>
+        <span class="card-title">Daily Goals</span>
+        <span class="card-meta" id="goalsCardMeta">0 of 0</span>
+      </button>
+
+    </div>
+  </main>
+
+  <!-- ===================== FEATURE VIEW (full screen overlay) ===================== -->
+  <div class="feature-view" id="featureView" aria-hidden="true">
+    <div class="feature-view-inner">
+      <button class="back-btn" id="backBtn">
+        <span aria-hidden="true">←</span> Back to console
+      </button>
+
+      <!-- ---------- TODO ---------- -->
+      <section class="feature-panel" id="panel-todo" data-panel="todo">
+        <h2 class="panel-title">Task List</h2>
+        <p class="panel-sub">Capture what needs doing today.</p>
+        <form class="todo-form" id="todoForm">
+          <input type="text" id="todoInput" class="text-input" placeholder="Add a task and press enter…" autocomplete="off" maxlength="140">
+          <button type="submit" class="btn-primary">Add</button>
+        </form>
+        <ul class="todo-list" id="todoList"></ul>
+        <p class="empty-note" id="todoEmpty">Nothing here yet. Add your first task above.</p>
+      </section>
+
+      <!-- ---------- PLANNER ---------- -->
+      <section class="feature-panel" id="panel-planner" data-panel="planner">
+        <h2 class="panel-title">Daily Planner</h2>
+        <p class="panel-sub">Assign a note to each hour of your day.</p>
+        <div class="planner-grid" id="plannerGrid"></div>
+      </section>
+
+      <!-- ---------- MOTIVATION ---------- -->
+      <section class="feature-panel" id="panel-motivation" data-panel="motivation">
+        <h2 class="panel-title">Motivation</h2>
+        <p class="panel-sub">A short quote to reset your focus.</p>
+        <div class="quote-card">
+          <p class="quote-text" id="quoteText">Loading a quote…</p>
+          <p class="quote-author" id="quoteAuthor"></p>
+        </div>
+        <button class="btn-primary" id="newQuoteBtn">New quote</button>
+      </section>
+
+      <!-- ---------- POMODORO ---------- -->
+      <section class="feature-panel" id="panel-pomodoro" data-panel="pomodoro">
+        <h2 class="panel-title">Focus Timer</h2>
+        <p class="panel-sub" id="pomodoroModeLabel">Work session</p>
+        <div class="gauge-wrap">
+          <svg class="gauge" viewBox="0 0 200 200" aria-hidden="true">
+            <circle cx="100" cy="100" r="88" class="gauge-track"/>
+            <circle cx="100" cy="100" r="88" class="gauge-progress" id="gaugeProgress" transform="rotate(-90 100 100)"/>
+          </svg>
+          <span class="gauge-readout" id="timerReadout">25:00</span>
+        </div>
+        <div class="timer-controls">
+          <button class="btn-primary" id="timerStart">Start</button>
+          <button class="btn-secondary" id="timerPause">Pause</button>
+          <button class="btn-secondary" id="timerReset">Reset</button>
+        </div>
+      </section>
+
+      <!-- ---------- WEATHER ---------- -->
+      <section class="feature-panel" id="panel-weather" data-panel="weather">
+        <h2 class="panel-title">Weather</h2>
+        <p class="panel-sub" id="weatherLocationLabel">Fetching your location…</p>
+        <div class="weather-card" id="weatherCard">
+          <span class="weather-icon" id="weatherIcon">◌</span>
+          <span class="weather-temp" id="weatherTemp">--°C</span>
+          <span class="weather-condition" id="weatherCondition">—</span>
+          <div class="weather-details">
+            <div><span class="wd-label">Humidity</span><span id="weatherHumidity">--%</span></div>
+            <div><span class="wd-label">Wind</span><span id="weatherWind">-- km/h</span></div>
+            <div><span class="wd-label">Feels like</span><span id="weatherFeels">--°</span></div>
+          </div>
+        </div>
+        <button class="btn-secondary" id="weatherRetry">Retry</button>
+      </section>
+
+      <!-- ---------- GOALS ---------- -->
+      <section class="feature-panel" id="panel-goals" data-panel="goals">
+        <h2 class="panel-title">Daily Goals</h2>
+        <p class="panel-sub" id="goalsProgressLabel">0 of 0 completed</p>
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="goalsProgressFill"></div></div>
+        <form class="todo-form" id="goalForm">
+          <input type="text" id="goalInput" class="text-input" placeholder="Add a goal for today…" autocomplete="off" maxlength="140">
+          <button type="submit" class="btn-primary">Add</button>
+        </form>
+        <ul class="todo-list" id="goalList"></ul>
+        <p class="empty-note" id="goalsEmpty">No goals set yet.</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
